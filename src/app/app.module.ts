@@ -1,13 +1,17 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-
+import {LoginComponent} from '../app/views/Usuario/login/login.component'
+import { JwtHelperService, JWT_OPTIONS  } from '@auth0/angular-jwt';
+import { JwtModule } from '@auth0/angular-jwt';
+import {AuthInterceptor} from './Services/Usuario/auth.interceptor';
+import {LoginService} from './Services/Usuario/login.service';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -17,13 +21,24 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('token');
+        }
+      }
+    }),
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-
+    LoginComponent
   ],
-  providers: [],
+  providers: [
+    JwtHelperService,
+    LoginService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

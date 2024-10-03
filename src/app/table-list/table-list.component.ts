@@ -22,7 +22,7 @@ export class TableListComponent implements OnInit {
         console.log('Usuarios:', this.usuarios);
       },
       error => {
-        console.error('Error al obtener la lista de usuarios:', error);
+        console.error('Error al fo la lista de usuarios:', error);
       }
     );
   }
